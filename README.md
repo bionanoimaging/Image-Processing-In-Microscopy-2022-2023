@@ -24,7 +24,7 @@ Officially, over Friedolin. Remember to register for the lecture, the exercises 
 ## Code
 To download the files, we recommend `git`:
 ```
-git clone git@github.com:bionanoimaging/Image-Processing-In-Microscopy.git
+git clone git@github.com:bionanoimaging/Image-Processing-In-Microscopy-2022-2023.git
 ```
 Usually via a _git pull_ you can update the code. If anything goes wrong which you can't fix, clone it again to a new folder.
 
