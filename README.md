@@ -42,7 +42,8 @@ Also check out the [documentation](https://docs.julialang.org/en/v1/manual/perfo
 There is a [Cheatsheet](https://juliadocs.github.io/Julia-Cheat-Sheet/) available.
 
 ### Activate Environment
-Open the downloaded source folder with VSCode. 
+Open the downloaded source folder with VSCode.
+We are going to use [Pluto.jl](https://github.com/fonsp/Pluto.jl) for the notebooks.
 Open the Julia REPL:
 Try to type:
 ```julia
