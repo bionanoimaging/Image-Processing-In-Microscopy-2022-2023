@@ -10,8 +10,10 @@ Officially, over Friedolin. Remember to register for the lecture, the exercises 
 ### Homework
 <details>
     <summary>Details</summary>
-    * Homework 01
-        * Empty (HW01.jl)[HW01.jl]
+    
+* 21.10.22: Homework 01 about adding and removing Noise (more will follow later in this course)
+    * [HW01.jl](HW01.jl)
+    
 </details>
 
 ### Q&A Seminars
