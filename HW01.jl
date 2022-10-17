@@ -113,16 +113,6 @@ Green is excellent, red not :(
 # ╔═╡ 1116455e-4698-489a-add2-4e1d8ecbb546
 my_show(add_gauss_noise(img, 0.15), set_one=true)
 
-# ╔═╡ 8e343a3d-ab0f-45a1-9161-21fec07755c9
-md"###### Type Stability of your functions.
-That means that the output type is identical to the input type"
-
-# ╔═╡ d865dddc-6d32-416b-ba12-8f6b3870e771
-PlutoTest.@test Float32 == eltype(add_gauss_noise(ones(Float32, (512, 512)), 0.3f0))
-
-# ╔═╡ 5c9a8c7b-e9c4-4177-86bb-b69113fce144
-PlutoTest.@test Float32 == eltype(add_gauss_noise_fl!(ones(Float32, (512, 512)), 0.3))
-
 # ╔═╡ cc7bbb55-b8dd-454b-b170-45137ab0c0b5
 md"###### Check wether mean and standard deviation are correct"
 
@@ -163,24 +153,15 @@ function add_poisson_noise!(img, scale_to=nothing)
 end
 
 # ╔═╡ 6cf8ff2a-4255-4c53-9376-5a0d2d372569
-add_poisson_noise!(10 .* ones(Float32, (3, 3)))
+add_poisson_noise!(10 .* ones((3, 3)))
 
 # ╔═╡ e3fcd381-9652-4e1d-8585-a91f87b73ce5
 md"### Test 1.2 - Poisson Noise
-
-You probably encounter errors for Float32 types errors, try to put a `Float64(some_part)` at the right place.
-
-Works like this:
-* `typeof(1f0)` = $(typeof(1f0))
-* `typeof(Float64(1f0))` = $(typeof(Float64(1f0)))
 
 "
 
 # ╔═╡ f3efcfcf-4516-43d2-9375-d8863b4b6f5b
 my_show(add_poisson_noise!(100 .* img), set_one=true)
-
-# ╔═╡ 00c72e52-09fa-413b-acfd-83c760d42d7f
-PlutoTest.@test Float32 == eltype(add_poisson_noise!(100 .* ones(Float32, (512, 512)), 0.3f0))
 
 # ╔═╡ 5b68030f-557e-449e-8baf-cf7ae65e4425
 mean(add_poisson_noise!(150 .* ones(Float64, (512, 512))))
@@ -189,16 +170,16 @@ mean(add_poisson_noise!(150 .* ones(Float64, (512, 512))))
 PlutoTest.@test ≈(150, mean(add_poisson_noise!(150 .* ones(Float64, (512, 512)))), rtol=0.05)
 
 # ╔═╡ 41118b3c-3e49-4fc7-8c80-7906b7cf91fe
-PlutoTest.@test ≈(√(150), std(add_poisson_noise!(150 * ones(Float32, (512, 512)))), rtol=0.05)
+PlutoTest.@test ≈(√(150), std(add_poisson_noise!(150 * ones(Float64, (512, 512)))), rtol=0.05)
 
 # ╔═╡ f8be3a4b-d8f0-40cb-869e-81c17e58327a
 md"###### Consider those tests as bonus"
 
 # ╔═╡ 65a8981d-890b-4590-a913-6890ecf3817d
-PlutoTest.@test ≈(150, 150 * mean(add_poisson_noise!(ones(Float32, (512, 512)), 150)), rtol=0.05)
+PlutoTest.@test ≈(150, 150 * mean(add_poisson_noise!(ones((512, 512)), 150)), rtol=0.05)
 
 # ╔═╡ 272c8afb-667f-49c7-af48-2feb1b9d06f7
-PlutoTest.@test ≈(√(150), 150 * std(add_poisson_noise!(ones(Float32, (512, 512)), 150)), rtol=0.05)
+PlutoTest.@test ≈(√(150), 150 * std(add_poisson_noise!(ones((512, 512)), 150)), rtol=0.05)
 
 # ╔═╡ 59482e49-d784-4303-9487-bf37f6a0462e
 md"## 1.3 Hot Pixels
@@ -209,13 +190,13 @@ Another issues are hot pixels which show maximum value. This can be due to damag
 
 # ╔═╡ 6e050fc2-4db2-4e6e-abd4-2812b47c070f
 """
-	add_hot_pixels(img, probability=0.1; max_value=one(eltype(img)))
+	add_hot_pixels!(img, probability=0.1; max_value=one(eltype(img)))
 
 Add randomly hot pixels. The probability for each pixel to be hot,
 should be specified by `probability`.
 `max_value` is a keyword argument which is the value the _hot_ pixel will have.
 """
-function add_hot_pixels!(img, probability=0.1; max_value=one(eltype(img)))
+function add_hot_pixels!(img, probability=0.1; max_value=1)
 	# todo
 	return img
 end
@@ -1094,7 +1075,7 @@ version = "17.4.0+0"
 # ╠═8a11c2b7-b6e5-4c26-9e06-ad3ab958db9c
 # ╠═50044e20-1dda-444f-9011-d9a55e182e11
 # ╟─b731d80c-3012-49f5-8e63-9b7cea0ed667
-# ╠═d8c83f2c-76ea-42b9-bd39-7fa5cafcd4d3
+# ╟─d8c83f2c-76ea-42b9-bd39-7fa5cafcd4d3
 # ╠═334ebdc5-dc11-4e83-ad12-a1961420a97b
 # ╟─2122c12f-0832-4f19-9a77-3047d5311cba
 # ╟─a7d7a415-7464-43fb-a2bf-8e3f2d999c32
@@ -1103,9 +1084,6 @@ version = "17.4.0+0"
 # ╠═c0b5ff08-7342-4c25-9791-be3a4918c400
 # ╟─d56bc500-f5cf-40f3-8c0b-b4ae26a58367
 # ╠═1116455e-4698-489a-add2-4e1d8ecbb546
-# ╟─8e343a3d-ab0f-45a1-9161-21fec07755c9
-# ╠═d865dddc-6d32-416b-ba12-8f6b3870e771
-# ╠═5c9a8c7b-e9c4-4177-86bb-b69113fce144
 # ╟─cc7bbb55-b8dd-454b-b170-45137ab0c0b5
 # ╠═c997c248-fba8-4ed8-ab75-179d248e6b83
 # ╠═07bc00b7-81ad-4645-8fbe-8545ccdfe7e4
@@ -1116,11 +1094,10 @@ version = "17.4.0+0"
 # ╠═6cf8ff2a-4255-4c53-9376-5a0d2d372569
 # ╟─e3fcd381-9652-4e1d-8585-a91f87b73ce5
 # ╠═f3efcfcf-4516-43d2-9375-d8863b4b6f5b
-# ╠═00c72e52-09fa-413b-acfd-83c760d42d7f
 # ╠═5b68030f-557e-449e-8baf-cf7ae65e4425
 # ╠═78a39a77-bc9d-427a-a113-4e64b0c9d311
 # ╠═41118b3c-3e49-4fc7-8c80-7906b7cf91fe
-# ╠═f8be3a4b-d8f0-40cb-869e-81c17e58327a
+# ╟─f8be3a4b-d8f0-40cb-869e-81c17e58327a
 # ╠═65a8981d-890b-4590-a913-6890ecf3817d
 # ╠═272c8afb-667f-49c7-af48-2feb1b9d06f7
 # ╟─59482e49-d784-4303-9487-bf37f6a0462e
