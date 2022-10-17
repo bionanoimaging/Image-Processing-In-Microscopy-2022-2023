@@ -10,7 +10,8 @@ Officially, over Friedolin. Remember to register for the lecture, the exercises 
 ### Homework
 <details>
     <summary>Details</summary>
-
+    * Homework 01
+        * Empty (HW01.jl)[HW01.jl]
 </details>
 
 ### Q&A Seminars
