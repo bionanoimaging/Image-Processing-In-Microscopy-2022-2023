@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.13
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -31,7 +31,7 @@ md"## Load Packages"
 
 # ╔═╡ b731d80c-3012-49f5-8e63-9b7cea0ed667
 """
-    my_show(arr; set_one=false, set_zero=false)
+    my_show(arr::AbstractArray{<:Real}; set_one=false, set_zero=false)
 Displays a real valued array . Brightness encodes magnitude.
 Works within Jupyter and Pluto.
 ## Keyword args
@@ -95,6 +95,8 @@ Try to find out how to write for loops to iterate through an array.
 This function adds normal distributed noise to `img`.
 `σ` is an optional argument.
 This function is memory efficient by using for loops.
+
+
 `!` means that the input (`img`) is modified.
 Therefore, don't return a new array but instead modify the existing one!
 The bang (!) is a convention in Julia that a function modifies the input.
@@ -139,9 +141,12 @@ Read the documentation of this package how to generate Poisson Random numbers
 	add_poisson_noise!(img, scale_to=nothing)
 
 This function adds poisson distributed noise to `img`.
+
 Before adding noise, it scales the maximum value to `scale_to` and 
 divides by it afterwards.
-With that we can set the number of events (like a photon count)
+With that we can set the number of events (like a photon count).
+
+Differently said: the `scale_to` applies Noise to an array equivalent to the noise level of an array with maximum peak `scale_to`.
 
 If `isnothing(scale_to) == true`, we don't modify/scale the array.
 
@@ -154,6 +159,9 @@ end
 
 # ╔═╡ 6cf8ff2a-4255-4c53-9376-5a0d2d372569
 add_poisson_noise!(10 .* ones((3, 3)))
+
+# ╔═╡ 9a3feb13-0424-448c-934b-45c476cb0096
+add_poisson_noise!(10 .* ones((3, 3)), 100)
 
 # ╔═╡ e3fcd381-9652-4e1d-8585-a91f87b73ce5
 md"### Test 1.2 - Poisson Noise
@@ -184,8 +192,7 @@ PlutoTest.@test ≈(√(150), 150 * std(add_poisson_noise!(ones((512, 512)), 150
 # ╔═╡ 59482e49-d784-4303-9487-bf37f6a0462e
 md"## 1.3 Hot Pixels
 
-Another issues are hot pixels which show maximum value. This can be due to damaged pixels or some other noise (radioactivity, ...). Often this is called Salt (because white) noise
-
+Another issue are hot pixels which result in a pixel with maximum value. This can be due to damaged pixels or some other noise (radioactivity, ...). Often this is called Salt (because of the maximum brightness) noise.
 " 
 
 # ╔═╡ 6e050fc2-4db2-4e6e-abd4-2812b47c070f
@@ -203,6 +210,12 @@ end
 
 # ╔═╡ 22985061-9740-45e9-af56-e0787dadba7b
 my_show(add_hot_pixels!(copy(img)))
+
+# ╔═╡ b6c25124-3165-4c85-9b1c-da68bd68b59f
+my_show(add_hot_pixels!(copy(img), 0.5; max_value=10))
+
+# ╔═╡ 76e83c0b-e9a8-46bd-8a7e-cac39ccaefff
+my_show(add_hot_pixels!(copy(img), 0.9))
 
 # ╔═╡ 42f92a8c-54bb-4033-9ef2-f5ffb78f4f3a
 md"### 1.3 Test"
@@ -237,6 +250,10 @@ my_show([img_g img_p img_h])
 # ╔═╡ 75aa8212-8ba3-4fba-b8b2-af2dd9c82adf
 # check out the help
 imfilter
+
+# ╔═╡ ded0b153-3ba6-4ad6-906b-87930e2b82d0
+# check out the help
+normal
 
 # ╔═╡ 6acf7ba6-445d-4ac0-a83f-6916318c783c
 function gaussian_noise_remove(arr; kernel_size=(3,3), σ=1)
@@ -274,9 +291,11 @@ PlutoTest.@test sum(abs2, img_g .- img) > sum(abs2, img_g_gauss .- img)
 
 # ╔═╡ 0f6ff33f-e50a-4317-a240-3b2f52de7a97
 md"## 2.2 Noise Removal with Median Filter
-The median filter slides with an quadratic shaped box over the arrays and
+The median filter slides with a quadratic shaped box over the array and
 always takes the median value of this array.
 
+So conceptually, you can use two for loops over the first two dimensions of the array. Then extract a region around this point and calculate the median.
+Try to preserve the image output size. Assign the median to this pixel.
 "
 
 # ╔═╡ 7bc0f845-d5d4-4192-be1d-b97750e95761
@@ -346,7 +365,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.2"
 manifest_format = "2.0"
-project_hash = "92e4b50d4fc7f5e6bc8e40658dbcfba104bc488e"
+project_hash = "5260083a9dfaa0285cb23a3321980040be762f9f"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -1092,6 +1111,7 @@ version = "17.4.0+0"
 # ╠═3ccbf4fb-0707-4ce8-83d8-b1af555f3fe1
 # ╠═1e4b32cb-00ea-439f-900e-abadc850be95
 # ╠═6cf8ff2a-4255-4c53-9376-5a0d2d372569
+# ╠═9a3feb13-0424-448c-934b-45c476cb0096
 # ╟─e3fcd381-9652-4e1d-8585-a91f87b73ce5
 # ╠═f3efcfcf-4516-43d2-9375-d8863b4b6f5b
 # ╠═5b68030f-557e-449e-8baf-cf7ae65e4425
@@ -1103,6 +1123,8 @@ version = "17.4.0+0"
 # ╟─59482e49-d784-4303-9487-bf37f6a0462e
 # ╠═6e050fc2-4db2-4e6e-abd4-2812b47c070f
 # ╠═22985061-9740-45e9-af56-e0787dadba7b
+# ╠═b6c25124-3165-4c85-9b1c-da68bd68b59f
+# ╠═76e83c0b-e9a8-46bd-8a7e-cac39ccaefff
 # ╟─42f92a8c-54bb-4033-9ef2-f5ffb78f4f3a
 # ╠═a9ad9d52-53c9-44ce-8edc-af8d7bfdc81f
 # ╟─373a3e39-fd8c-4cea-88bb-2b9c3734f14f
@@ -1111,6 +1133,7 @@ version = "17.4.0+0"
 # ╠═2d6f25a5-b902-4e46-ac3f-cf452f525912
 # ╠═62c6e2f0-0007-40ec-81c5-61cda80f59e5
 # ╠═75aa8212-8ba3-4fba-b8b2-af2dd9c82adf
+# ╠═ded0b153-3ba6-4ad6-906b-87930e2b82d0
 # ╠═6acf7ba6-445d-4ac0-a83f-6916318c783c
 # ╟─4f683117-9a09-4837-b0af-5818ac2e62fd
 # ╟─01203c2c-4e67-492c-9d9c-dc84a84afe15
