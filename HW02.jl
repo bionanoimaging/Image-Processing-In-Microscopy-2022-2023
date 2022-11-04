@@ -132,7 +132,7 @@ function to_equal_intensity_tuple(value::T) where T
 	green_map(x) = x # TODO
 	blue_map(x) = x # TODO
 
-	return (2,2,2) # TODO, return the correct tuple!
+	return (0,0,1) # TODO, return the correct tuple!
 end
 
 # ╔═╡ 2b3c2ab1-9bec-43f5-a008-795ac354e080
@@ -173,8 +173,11 @@ md"##### Check if the output is always 0<=output<=1
 _Side Note: it took quite a while to engineer this line :D_
 "
 
+# ╔═╡ 4ad64115-5b07-4760-963b-ca631970132e
+bbb = foldl(&, foldl.(Ref((acc, x) -> acc || 0<=x<=1), to_equal_intensity_tuple.(rand(0.0:1.0, 100)), init=false))
+
 # ╔═╡ c0debce4-d81b-4d5d-8907-53d567cf664a
-PlutoTest.@test foldl(&, foldl.(Ref((acc, x) -> acc || 0<=x<=1), to_equal_intensity_tuple.(rand(0.0:1.0, 100)), init=false))
+PlutoTest.@test bbb
 
 # ╔═╡ 4456a207-7f56-4900-95dc-77fe7de31c5d
 md"#### Type Stability
@@ -199,17 +202,15 @@ You don't need to know the details, but if you'd like understand, you find those
 "
 
 # ╔═╡ 633d295e-cc1f-4864-a36b-11905bc47a50
+function create_equal_intensity_colormap()
+	values = range(0, 1, length=128)
+	return map(x -> RGB(x...), to_equal_intensity_tuple.(values))
+end
+
+# ╔═╡ 8f0b0ff8-8b9b-4e3a-9b0b-7e10599c5e41
 begin
-	# register that with the color map mechanism
-	function create_equal_intensity_colormap()
-		values = range(0, 1, length=128)
-		return map(x -> RGB(x...), to_equal_intensity_tuple.(values))
-	end
-	
-	begin
-		my_equal_intensity_colormap = create_equal_intensity_colormap()
-		loadcolorscheme(:my_equal_intensity_colormap, my_equal_intensity_colormap)
-	end
+	my_equal_intensity_colormap = create_equal_intensity_colormap()
+	loadcolorscheme(:my_equal_intensity_colormap, my_equal_intensity_colormap)
 end
 
 # ╔═╡ 6b65dc02-9a84-43c2-9bb5-32104d23f580
@@ -2167,12 +2168,14 @@ version = "1.4.1+0"
 # ╠═76e2f439-1dff-4f2a-9c05-14e10a13fda6
 # ╠═5315fbfd-8ade-46d5-9851-f3ee98c349f7
 # ╟─9d4337c8-6cd1-4112-9477-4a40d13fe7e3
+# ╠═4ad64115-5b07-4760-963b-ca631970132e
 # ╠═c0debce4-d81b-4d5d-8907-53d567cf664a
 # ╟─4456a207-7f56-4900-95dc-77fe7de31c5d
 # ╠═a6fbfa34-33c6-4f09-9dcd-773d92a4db0d
 # ╠═b70be939-7f1d-4e80-9d7f-cc2947d57280
 # ╟─e9cc6238-5ad9-4a50-93a7-f7065648574a
 # ╠═633d295e-cc1f-4864-a36b-11905bc47a50
+# ╠═8f0b0ff8-8b9b-4e3a-9b0b-7e10599c5e41
 # ╠═6b65dc02-9a84-43c2-9bb5-32104d23f580
 # ╟─160051e5-56b9-413a-a78d-b371a85ff18c
 # ╠═1483db2c-6374-4c93-ade4-db8894071ce7
