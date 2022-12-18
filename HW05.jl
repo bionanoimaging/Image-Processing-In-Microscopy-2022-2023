@@ -93,6 +93,11 @@ psf = copy(img)
 measured = 0.0001f0 .+ poisson(FourierTools.conv(img, psf), 100);
 
 # ╔═╡ f4e2cc11-e86e-4afc-a021-aed27283a5f1
+function gray_show(arr::AbstractArray{<:Real}; set_one=true, set_zero=false)
+    arr = set_zero ? arr .- minimum(arr) : arr
+    arr = set_one ? arr ./ maximum(arr) : arr
+    Gray.(arr)
+end
 gray_show(measured)
 
 # ╔═╡ dc9fa103-6a00-4129-b5d1-c1b36216d13d
