@@ -17,7 +17,6 @@ end
 # ╔═╡ 9112b09c-5a21-11ec-0847-1971b3c9a6cd
 begin
 	using Pkg
-	Pkg.activate("../../")
 	using Revise
 end
 
